@@ -202,6 +202,9 @@ internal final class NIOTSConnectionChannel: StateManagedNWConnectionChannel {
     /// Whether to use peer-to-peer connectivity when connecting to Bonjour services.
     internal var enablePeerToPeer = false
 
+    /// Whether to require that this connection is made over the cellular network.
+    internal var requireCellular: Bool = false
+
     /// The default multipath service type.
     internal var multipathServiceType = NWParameters.MultipathServiceType.disabled
 

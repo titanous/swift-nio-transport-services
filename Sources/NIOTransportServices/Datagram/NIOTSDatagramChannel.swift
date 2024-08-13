@@ -110,6 +110,9 @@ internal final class NIOTSDatagramChannel: StateManagedNWConnectionChannel {
     /// Whether to use peer-to-peer connectivity when connecting to Bonjour services.
     internal var enablePeerToPeer = false
 
+    /// Whether to require that this connection is made over the cellular network.
+    internal var requireCellular: Bool = false
+
     /// The cache of the local and remote socket addresses. Must be accessed using _addressCacheLock.
     internal var _addressCache = AddressCache(local: nil, remote: nil)
 

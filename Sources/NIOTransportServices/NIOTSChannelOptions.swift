@@ -21,6 +21,9 @@ public struct NIOTSChannelOptions {
     /// See: ``Types/NIOTSWaitForActivityOption``.
     public static let waitForActivity = NIOTSChannelOptions.Types.NIOTSWaitForActivityOption()
 
+    /// See: ``Types/NIOTSRequireCellularOption``.
+    public static let requireCellular = NIOTSChannelOptions.Types.NIOTSRequireCellularOption()
+
     /// See: ``Types/NIOTSEnablePeerToPeerOption``.
     public static let enablePeerToPeer = NIOTSChannelOptions.Types.NIOTSEnablePeerToPeerOption()
     
@@ -96,6 +99,17 @@ extension NIOTSChannelOptions {
         public struct NIOTSAllowLocalEndpointReuse: ChannelOption, Equatable {
             public typealias Value = Bool
             
+            public init() {}
+        }
+
+        /// ``NIOTSRequireCellular`` controls whether the `Channel` will only send requests via a cellular
+        /// network connection. By default this option is set to `false`.
+        ///
+        /// This option must be set on the bootstrap: setting it after the channel is initialized will have no effect.
+        @available(OSX 10.14, iOS 12.0, tvOS 12.0, watchOS 6.0, *)
+        public struct NIOTSRequireCellularOption: ChannelOption, Equatable {
+            public typealias Value = Bool
+
             public init() {}
         }
 
