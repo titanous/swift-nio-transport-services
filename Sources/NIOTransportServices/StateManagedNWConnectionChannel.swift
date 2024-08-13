@@ -71,6 +71,8 @@ internal protocol StateManagedNWConnectionChannel: StateManagedChannel where Act
 
     var enablePeerToPeer: Bool { get set }
 
+    var requireCellular: Bool { get set }
+
     var _inboundStreamOpen: Bool { get }
 
     var _pipeline: ChannelPipeline! { get }
@@ -141,6 +143,12 @@ extension StateManagedNWConnectionChannel {
         parameters.includePeerToPeer = self.enablePeerToPeer
 
         parameters.multipathServiceType = self.multipathServiceType
+
+        if self.requireCellular {
+            parameters.prohibitExpensivePaths = false
+            parameters.requiredInterfaceType = .cellular
+            parameters.prohibitedInterfaceTypes = [.wifi, .loopback, .wiredEthernet]
+        }
 
         let connection = NWConnection(to: target, using: parameters)
         connection.stateUpdateHandler = self.stateUpdateHandler(newState:)
@@ -570,6 +578,9 @@ extension StateManagedNWConnectionChannel {
             }
         case is NIOTSChannelOptions.Types.NIOTSEnablePeerToPeerOption:
             self.enablePeerToPeer = value as! NIOTSChannelOptions.Types.NIOTSEnablePeerToPeerOption.Value
+        case is NIOTSChannelOptions.Types.NIOTSRequireCellularOption:
+            self.requireCellular =
+                value as! NIOTSChannelOptions.Types.NIOTSRequireCellularOption.Value
         case _ as NIOTSChannelOptions.Types.NIOTSWaitForActivityOption:
             let newValue = value as! Bool
             self.options.waitForActivity = newValue
@@ -632,6 +643,8 @@ extension StateManagedNWConnectionChannel {
             return self.options.supportRemoteHalfClosure as! Option.Value
         case _ as NIOTSChannelOptions.Types.NIOTSWaitForActivityOption:
             return self.options.waitForActivity as! Option.Value
+        case _ as NIOTSChannelOptions.Types.NIOTSRequireCellularOption:
+            return self.requireCellular as! Option.Value
         case is NIOTSChannelOptions.Types.NIOTSCurrentPathOption:
             guard let currentPath = self.connection?.currentPath else {
                 throw NIOTSErrors.NoCurrentPath()
